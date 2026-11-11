@@ -5,10 +5,10 @@ import type { Action, UnknownAction } from './actions'
 /**
  * A *reducer* is a function that accepts
  * an accumulation and a value and returns a new accumulation. They are used
- * to reduce a collection of values down to a single value
+ * to reduce a collection of values down to a single value.
  *
  * Reducers are not unique to Redux—they are a fundamental concept in
- * functional programming.  Even most non-functional languages, like
+ * functional programming. Even most non-functional languages, like
  * JavaScript, have a built-in API for reducing. In JavaScript, it's
  * `Array.prototype.reduce()`.
  *
@@ -106,7 +106,7 @@ export type PreloadedStateShapeFromReducersMapObject<M> = M[keyof M] extends
   ? {
       [P in keyof M]: M[P] extends (
         inputState: infer InputState,
-        action: UnknownAction
+        action: ActionFromReducersMapObject<M>
       ) => any
         ? InputState
         : never

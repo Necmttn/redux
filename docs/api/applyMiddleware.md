@@ -5,6 +5,9 @@ hide_title: true
 description: 'API > applyMiddleware: extending the Redux store'
 ---
 
+<!-- prettier-ignore -->
+import CoreApiNote from "../components/_CoreApiNote.mdx";
+
 &nbsp;
 
 # `applyMiddleware(...middleware)`
@@ -13,21 +16,19 @@ description: 'API > applyMiddleware: extending the Redux store'
 
 Middleware is the suggested way to extend Redux with custom functionality. Middleware lets you wrap the store's [`dispatch`](Store.md#dispatchaction) method for fun and profit. The key feature of middleware is that it is composable. Multiple middleware can be combined together, where each middleware requires no knowledge of what comes before or after it in the chain.
 
-:::warning Warning
+<CoreApiNote />
 
-You shouldn't have to call `applyMiddleware` directly. Redux Toolkit's [`configureStore` method](https://redux-toolkit.js.org/api/configureStore) automatically adds a default set of middleware to the store, or can accept a list of middleware to add.
-
-:::
+You shouldn't have to call `applyMiddleware` directly. [`configureStore`](/toolkit/api/configureStore) applies it for you, adds a default set of middleware (including `redux-thunk`), and accepts a `middleware` callback for adding more.
 
 The most common use case for middleware is to support asynchronous actions without much boilerplate code or a dependency on a library like [Rx](https://github.com/Reactive-Extensions/RxJS). It does so by letting you dispatch [async actions](../understanding/thinking-in-redux/Glossary.md#async-action) in addition to normal actions.
 
 For example, [redux-thunk](https://github.com/reduxjs/redux-thunk) lets the action creators invert control by dispatching functions. They would receive [`dispatch`](Store.md#dispatchaction) as an argument and may call it asynchronously. Such functions are called _thunks_. Another example of middleware is [redux-promise](https://github.com/acdlite/redux-promise). It lets you dispatch a [Promise](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise) async action, and dispatches a normal action when the Promise resolves.
 
-The original Redux [`createStore`](createStore.md) method does not understand what middleware are out of the box - it has to be configured with `applyMiddleware` to add that behavior. However, Redux Toolkit's [`configureStore` method](https://redux-toolkit.js.org/api/configureStore) automatically adds middleware support by default.
+The original Redux [`createStore`](createStore.md) method does not understand what middleware are out of the box - it has to be configured with `applyMiddleware` to add that behavior.
 
 ## Arguments
 
-- `...middleware` (_arguments_): Functions that conform to the Redux _middleware API_. Each middleware receives [`Store`](Store.md)'s [`dispatch`](Store.md#dispatchaction) and [`getState`](Store.md#getState) functions as named arguments, and returns a function. That function will be given the `next` middleware's dispatch method, and is expected to return a function of `action` calling `next(action)` with a potentially different argument, or at a different time, or maybe not calling it at all. The last middleware in the chain will receive the real store's [`dispatch`](Store.md#dispatchaction) method as the `next` parameter, thus ending the chain. So, the middleware signature is `({ getState, dispatch }) => next => action`.
+- `...middleware` (_arguments_): Functions that conform to the Redux _middleware API_. Each middleware receives [`Store`](Store.md)'s [`dispatch`](Store.md#dispatchaction) and [`getState`](Store.md#getstate) functions as named arguments, and returns a function. That function will be given the `next` middleware's dispatch method, and is expected to return a function of `action` calling `next(action)` with a potentially different argument, or at a different time, or maybe not calling it at all. The last middleware in the chain will receive the real store's [`dispatch`](Store.md#dispatchaction) method as the `next` parameter, thus ending the chain. So, the middleware signature is `({ getState, dispatch }) => next => action`.
 
 ### Returns
 
@@ -71,7 +72,7 @@ store.dispatch({
 
 ```js
 import { createStore, combineReducers, applyMiddleware } from 'redux'
-import thunk from 'redux-thunk'
+import { thunk } from 'redux-thunk'
 import * as reducers from './reducers'
 
 const reducer = combineReducers(reducers)
@@ -183,22 +184,19 @@ store
 // I can also dispatch a thunk async action from a component
 // any time its props change to load the missing data.
 
-import React from 'react'
-import { connect } from 'react-redux'
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
-function SandwichShop(props) {
-  const { dispatch, forPerson } = props
+export function SandwichShop({ forPerson }) {
+  const dispatch = useDispatch()
+  const sandwiches = useSelector(state => state.sandwiches)
 
   useEffect(() => {
     dispatch(makeASandwichWithSecretSauce(forPerson))
-  }, [forPerson])
+  }, [dispatch, forPerson])
 
-  return <p>{this.props.sandwiches.join('mustard')}</p>
+  return <p>{sandwiches.join('mustard')}</p>
 }
-
-export default connect(state => ({
-  sandwiches: state.sandwiches
-}))(SandwichShop)
 ```
 
 ## Tips

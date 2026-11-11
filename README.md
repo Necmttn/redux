@@ -1,6 +1,6 @@
 # <a href='https://redux.js.org'><img src='https://avatars.githubusercontent.com/u/13142323?s=200&v=4' height='60' alt='Redux Logo' aria-label='redux.js.org' style="display: flex;align-items: center;"/>Redux</a>
 
-Redux is a predictable state container for JavaScript apps.
+Redux is a JS library for predictable and maintainable global state management.
 
 It helps you write applications that behave consistently, run in different environments (client, server, and native), and are easy to test. On top of that, it provides a great developer experience, such as [live code editing combined with a time traveling debugger](https://github.com/reduxjs/redux-devtools).
 
@@ -13,6 +13,8 @@ You can use Redux together with [React](https://react.dev), or with any other vi
 [![npm downloads](https://img.shields.io/npm/dm/redux.svg?style=flat-square)](https://www.npmjs.com/package/redux)
 [![redux channel on discord](https://img.shields.io/badge/discord-%23redux%20%40%20reactiflux-61dafb.svg?style=flat-square)](https://discord.gg/0ZcbPKXt5bZ6au5t)
 
+<a href="https://commitgoods.com/collections/redux?utm_source=github&amp;utm_medium=referral"><picture><source media="(prefers-color-scheme: dark)" srcset="https://cdn.shopify.com/s/files/1/0101/8752/files/commitgoods-badge-stacked-navy-dark.svg"><img src="https://cdn.shopify.com/s/files/1/0101/8752/files/commitgoods-badge-stacked-navy.svg" height="28" alt="Official merch on commitgoods.com"></picture></a>
+
 ## Installation
 
 ### Create a React Redux App
@@ -23,17 +25,18 @@ Both of these already have Redux Toolkit and React-Redux configured appropriatel
 
 ```bash
 # Vite with our Redux+TS template
-# (using the `degit` tool to clone and extract the template)
-npx degit reduxjs/redux-templates/packages/vite-template-redux my-app
+# (using the `tiged` tool to clone and extract the template)
+npx tiged reduxjs/redux-templates/packages/vite-template-redux my-app
 
 # Next.js using the `with-redux` template
 npx create-next-app --example with-redux my-app
 ```
 
-We do not currently have official React Native templates, but recommend these templates for standard React Native and for Expo:
+For React Native, we have [an official Redux+TS template for Expo](https://github.com/reduxjs/redux-templates/tree/master/packages/expo-template-redux-typescript):
 
-- https://github.com/rahsheen/react-native-template-redux-typescript
-- https://github.com/rahsheen/expo-template-redux-typescript
+```bash
+npx tiged reduxjs/redux-templates/packages/expo-template-redux-typescript my-app
+```
 
 ```
 npm install @reduxjs/toolkit react-redux

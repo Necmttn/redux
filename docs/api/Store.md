@@ -4,6 +4,9 @@ title: Store
 description: 'API > Store: the core Redux store methods'
 ---
 
+<!-- prettier-ignore -->
+import CoreApiNote from "../components/_CoreApiNote.mdx";
+
 # Store
 
 A store holds the whole [state tree](../understanding/thinking-in-redux/Glossary.md#state) of your application.
@@ -11,7 +14,9 @@ The only way to change the state inside it is to dispatch an [action](../underst
 
 A store is not a class. It's just an object with a few methods on it.
 
-To create a store, **pass your root [reducer function](../understanding/thinking-in-redux/Glossary.md#reducer) to Redux Toolkit's [`configureStore` method](https://redux-toolkit.js.org/api/configureStore)**, which will set up a Redux store with a good default configuration. (Alternately, if you're not yet using Redux Toolkit, you can use the original [`createStore`](createStore.md) method, but we encourage you to [migrate your code to use Redux Toolkit](../usage/migrating-to-modern-redux.mdx) as soon as possible)
+<CoreApiNote />
+
+To create a store, pass your root [reducer function](../understanding/thinking-in-redux/Glossary.md#reducer) to `configureStore` (or to the deprecated core [`createStore`](createStore.md)).
 
 ## Store Methods
 
@@ -32,7 +37,7 @@ _(any)_: The current state tree of your application.
 
 Dispatches an action. This is the only way to trigger a state change.
 
-The store's reducer function will be called with the current [`getState()`](#getState) result and the given `action` synchronously. Its return value will be considered the next state. It will be returned from [`getState()`](#getState) from now on, and the change listeners will immediately be notified.
+The store's reducer function will be called with the current [`getState()`](#getstate) result and the given `action` synchronously. Its return value will be considered the next state. It will be returned from [`getState()`](#getstate) from now on, and the change listeners will immediately be notified.
 
 :::caution
 
@@ -56,15 +61,15 @@ In Redux, subscriptions are called after the root reducer has returned the new s
 
 However, if you wrap [`createStore`](createStore.md) with [`applyMiddleware`](applyMiddleware.md), the middleware can interpret actions differently, and provide support for dispatching [async actions](../understanding/thinking-in-redux/Glossary.md#async-action). Async actions are usually asynchronous primitives like Promises, Observables, or thunks.
 
-Middleware is created by the community and does not ship with Redux by default. You need to explicitly install packages like [redux-thunk](https://github.com/reduxjs/redux-thunk) or [redux-promise](https://github.com/acdlite/redux-promise) to use it. You may also create your own middleware.
+Middleware does not ship with the Redux core package. The most common middleware, [redux-thunk](https://github.com/reduxjs/redux-thunk), is included and enabled by default when you create a store with Redux Toolkit's `configureStore`. If you are using the core `createStore` directly, you need to install and apply middleware yourself. You may also create your own middleware.
 
 To learn how to describe asynchronous API calls, read the current state inside action creators, perform side effects, or chain them to execute in a sequence, see the examples for [`applyMiddleware`](applyMiddleware.md).
 
 #### Example
 
 ```js
-import { createStore } from 'redux'
-const store = createStore(todos, ['Use Redux'])
+import { configureStore } from '@reduxjs/toolkit'
+const store = configureStore({ reducer: todos, preloadedState: ['Use Redux'] })
 
 function addTodo(text) {
   return {
@@ -83,7 +88,7 @@ store.dispatch(addTodo('Read about the middleware'))
 
 ### subscribe(listener)
 
-Adds a change listener. It will be called any time an action is dispatched, and some part of the state tree may potentially have changed. You may then call [`getState()`](#getState) to read the current state tree inside the callback.
+Adds a change listener. It will be called any time an action is dispatched, and some part of the state tree may potentially have changed. You may then call [`getState()`](#getstate) to read the current state tree inside the callback.
 
 You may call [`dispatch()`](#dispatchaction) from a change listener, with the following caveats:
 
@@ -99,7 +104,7 @@ To unsubscribe the change listener, invoke the function returned by `subscribe`.
 
 #### Arguments
 
-1. `listener` (_Function_): The callback to be invoked any time an action has been dispatched, and the state tree might have changed. You may call [`getState()`](#getState) inside this callback to read the current state tree. It is reasonable to expect that the store's reducer is a pure function, so you may compare references to some deep path in the state tree to learn whether its value has changed.
+1. `listener` (_Function_): The callback to be invoked any time an action has been dispatched, and the state tree might have changed. You may call [`getState()`](#getstate) inside this callback to read the current state tree. It is reasonable to expect that the store's reducer is a pure function, so you may compare references to some deep path in the state tree to learn whether its value has changed.
 
 ##### Returns
 

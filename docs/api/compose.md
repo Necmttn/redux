@@ -5,6 +5,9 @@ hide_title: true
 description: 'API > compose: composing multiple functions together'
 ---
 
+<!-- prettier-ignore -->
+import CoreApiNote from "../components/_CoreApiNote.mdx";
+
 &nbsp;
 
 # `compose(...functions)`
@@ -16,11 +19,9 @@ Composes functions from right to left.
 This is a functional programming utility, and is included in Redux as a convenience.
 You might want to use it to apply several [store enhancers](../understanding/thinking-in-redux/Glossary.md#store-enhancer) in a row. `compose` is also usable as a general-purpose standalone method.
 
-:::warning Warning
+<CoreApiNote />
 
-You shouldn't have to call `compose` directly. Redux Toolkit's [`configureStore` method](https://redux-toolkit.js.org/api/configureStore) automatically configures a Redux store with the standard `applyMiddleware` and Redux DevTools store enhancers, and offers an `enhancers` argument to pass in additional enhancers.
-
-:::
+You shouldn't have to call `compose` directly. `configureStore` sets up the standard `applyMiddleware` and Redux DevTools store enhancers, and offers an `enhancers` callback for adding more.
 
 ## Arguments
 
@@ -32,17 +33,17 @@ You shouldn't have to call `compose` directly. Redux Toolkit's [`configureStore`
 
 ## Example
 
-This example demonstrates how to use `compose` to enhance a [store](Store.md) with [`applyMiddleware`](applyMiddleware.md) and a few developer tools from the [redux-devtools](https://github.com/reduxjs/redux-devtools) package.
+This example demonstrates how to use `compose` to enhance a [store](Store.md) with [`applyMiddleware`](applyMiddleware.md) and a second store enhancer. The enhancers are applied from right to left, so `applyMiddleware` wraps the store that `persistEnhancer` produced.
 
 ```js
 import { createStore, applyMiddleware, compose } from 'redux'
-import thunk from 'redux-thunk'
-import DevTools from './containers/DevTools'
+import { thunk } from 'redux-thunk'
+import { persistEnhancer } from './enhancers/persist'
 import reducer from '../reducers'
 
 const store = createStore(
   reducer,
-  compose(applyMiddleware(thunk), DevTools.instrument())
+  compose(applyMiddleware(thunk), persistEnhancer)
 )
 ```
 

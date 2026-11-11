@@ -4,23 +4,7 @@ title: Organizing State
 sidebar_label: Organizing State
 ---
 
-# Redux FAQ: Organizing State
-
-## Table of Contents
-
-- [Redux FAQ: Organizing State](#redux-faq-organizing-state)
-  - [Table of Contents](#table-of-contents)
-  - [Organizing State](#organizing-state)
-    - [Do I have to put all my state into Redux? Should I ever use React's `useState` or `useReducer`?](#do-i-have-to-put-all-my-state-into-redux-should-i-ever-use-reacts-usestate-or-usereducer)
-      - [Further information](#further-information)
-    - [Can I put functions, promises, or other non-serializable items in my store state?](#can-i-put-functions-promises-or-other-non-serializable-items-in-my-store-state)
-      - [Further information](#further-information-1)
-    - [How do I organize nested or duplicate data in my state?](#how-do-i-organize-nested-or-duplicate-data-in-my-state)
-      - [Further information](#further-information-2)
-    - [Should I put form state or other UI state in my store?](#should-i-put-form-state-or-other-ui-state-in-my-store)
-      - [Further Information](#further-information-3)
-
-## Organizing State
+## Redux FAQ: Organizing State
 
 ### Do I have to put all my state into Redux? Should I ever use React's `useState` or `useReducer`?
 
@@ -66,16 +50,20 @@ If you are okay with things like persistence and time-travel debugging potential
 
 ### How do I organize nested or duplicate data in my state?
 
-Data with IDs, nesting, or relationships should generally be stored in a “normalized” fashion: each object should be stored once, keyed by ID, and other objects that reference it should only store the ID rather than a copy of the entire object. It may help to think of parts of your store as a database, with individual “tables” per item type. Libraries such as [normalizr](https://github.com/paularmstrong/normalizr) and [redux-orm](https://github.com/tommikaikkonen/redux-orm) can provide help and abstractions in managing normalized data.
+Data with IDs, nesting, or relationships should generally be stored in a “normalized” fashion: each object should be stored once, keyed by ID, and other objects that reference it should only store the ID rather than a copy of the entire object. It may help to think of parts of your store as a database, with individual “tables” per item type.
+
+For most applications, use Redux Toolkit's [`createEntityAdapter`](/toolkit/api/createEntityAdapter) to manage normalized collections in your slices. It uses an `{ ids, entities }` state structure and provides reducer functions to add, update, and remove items, along with selectors to read them.
+
+The adapter does not turn nested objects into separate entities or replace relationships with IDs. If your API returns nested data, transform it into the normalized shape before adding it to the store. See [Normalizing Nested Data](../usage/structuring-reducers/NormalizingStateShape.md#normalizing-nested-data) for more on this step and tools such as Normalizr.
 
 #### Further information
 
 **Documentation**
 
 - [Redux Essentials: Normalizing Data](../tutorials/essentials/part-6-performance-normalization#normalizing-data)
+- [Redux Toolkit: `createEntityAdapter`](/toolkit/api/createEntityAdapter)
 - [Redux Fundamentals: Async Logic and Data Flow](../tutorials/fundamentals/part-6-async-logic.md)
 - [Redux Fundamentals: Standard Redux Patterns](../tutorials/fundamentals/part-7-standard-patterns.md)
-- [Examples: Real World example](../introduction/Examples.md#real-world)
 - [Using Redux: Structuring Reducers - Prerequisite Concepts](../usage/structuring-reducers/PrerequisiteConcepts.md#normalizing-data)
 - [Using Redux: Structuring Reducers - Normalizing State Shape](../usage/structuring-reducers/NormalizingStateShape.md)
 
@@ -102,9 +90,9 @@ The [same rules of thumb for deciding what should go in the Redux store](#do-i-h
 
 Based on this, in most cases you probably don't need a Redux-based form management library either. We suggest trying these approaches, in this order:
 
-- Even if the data is coming from the Redux store, start by writing your form logic by hand. It's likely this is all you'll need. (See [**Gosha Arinich's posts on working with forms in React**](https://goshakkk.name/on-forms-react/) for some excellent guidance on this.)
-- If you decide that writing forms "manually" is too difficult, try a React-based form library like [Formik](https://github.com/jaredpalmer/formik) or [React-Final-Form](https://github.com/final-form/react-final-form).
-- If you are absolutely sure you _must_ use a Redux-based form library because the other approaches aren't sufficient, then you may finally want to look at [Redux-Form](https://github.com/erikras/redux-form) and [React-Redux-Form](https://github.com/davidkpiano/react-redux-form).
+- Even if the data is coming from the Redux store, start by writing your form logic by hand with `useState`. It's likely this is all you'll need. (See [**Gosha Arinich's posts on working with forms in React**](https://goshacmd.com/on-forms-react/) for some excellent guidance on this.)
+- If you decide that writing forms "manually" is too difficult, try a React-based form library like [React Hook Form](https://react-hook-form.com/) or [TanStack Form](https://tanstack.com/form/latest). These keep the form state in the component and give you validation and submission handling. When the user submits, dispatch one action (or call an RTK Query mutation) with the final values.
+- Redux-based form libraries such as Redux-Form and React-Redux-Form are no longer actively maintained, and we don't recommend starting new projects with them. If you truly need form values in the store while the user is typing, write a small slice for that form and update it from the component's change handlers.
 
 If you are keeping form state in Redux, you should take some time to consider performance characteristics. Dispatching an action on every keystroke of a text input probably isn't worthwhile, and you may want to look into [ways to buffer keystrokes to keep changes local before dispatching](https://blog.isquaredsoftware.com/2017/01/practical-redux-part-7-forms-editing-reducers/). As always, take some time to analyze the overall performance needs of your own application.
 
@@ -112,10 +100,15 @@ Other kinds of UI state follow these rules of thumb as well. The classic example
 
 #### Further Information
 
+**Documentation**
+
+- [Style Guide: Avoid Putting Form State In Redux](../style-guide/style-guide.md#avoid-putting-form-state-in-redux)
+- [Style Guide: Evaluate Where Each Piece of State Should Live](../style-guide/style-guide.md#evaluate-where-each-piece-of-state-should-live)
+
 **Articles**
 
-- [Gosha Arinich: Writings on Forms in React](https://goshakkk.name/on-forms-react/)
-- [Practical Redux, Part 6: Connected Lists and Forms](https://blog.isquaredsoftware.com/2017/01/practical-redux-part-6-connected-lists-forms-and-performance/)
-- [Practical Redux, Part 7: Form Change Handling](https://blog.isquaredsoftware.com/2017/01/practical-redux-part-7-forms-editing-reducers/)
+- [Gosha Arinich: Writings on Forms in React](https://goshacmd.com/on-forms-react/)
+- [Practical Redux, Part 6: Connected Lists and Forms](https://blog.isquaredsoftware.com/2017/01/practical-redux-part-6-connected-lists-forms-and-performance/) (2017, uses `connect`; the reasoning about where form state lives still applies)
+- [Practical Redux, Part 7: Form Change Handling](https://blog.isquaredsoftware.com/2017/01/practical-redux-part-7-forms-editing-reducers/) (2017, uses `connect`)
 - [Practical Redux, Part 10: Managing Modals and Context Menus](https://blog.isquaredsoftware.com/2017/07/practical-redux-part-10-managing-modals/)
 - [React/Redux Links: Redux UI Management](https://github.com/markerikson/react-redux-links/blob/master/redux-ui-management.md)

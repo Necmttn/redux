@@ -1,18 +1,17 @@
-import $$observable from './utils/symbol-observable'
-
-import type {
-  Store,
-  StoreEnhancer,
-  Dispatch,
-  Observer,
-  ListenerCallback,
-  UnknownIfNonSpecific
-} from './types/store'
 import type { Action } from './types/actions'
 import type { Reducer } from './types/reducers'
+import type {
+  Dispatch,
+  ListenerCallback,
+  Observer,
+  Store,
+  StoreEnhancer,
+  UnknownIfNonSpecific
+} from './types/store'
 import ActionTypes from './utils/actionTypes'
 import isPlainObject from './utils/isPlainObject'
 import { kindOf } from './utils/kindOf'
+import $$observable from './utils/symbol-observable'
 
 /**
  * @deprecated
@@ -47,7 +46,7 @@ export function createStore<
 >(
   reducer: Reducer<S, A>,
   enhancer?: StoreEnhancer<Ext, StateExt>
-): Store<S, A, UnknownIfNonSpecific<StateExt>> & Ext
+): Store<S, A, UnknownIfNonSpecific<StateExt>> & NoInfer<Ext>
 /**
  * @deprecated
  *
@@ -83,7 +82,7 @@ export function createStore<
   reducer: Reducer<S, A, PreloadedState>,
   preloadedState?: PreloadedState | undefined,
   enhancer?: StoreEnhancer<Ext, StateExt>
-): Store<S, A, UnknownIfNonSpecific<StateExt>> & Ext
+): Store<S, A, UnknownIfNonSpecific<StateExt>> & NoInfer<Ext>
 export function createStore<
   S,
   A extends Action,
@@ -94,7 +93,7 @@ export function createStore<
   reducer: Reducer<S, A, PreloadedState>,
   preloadedState?: PreloadedState | StoreEnhancer<Ext, StateExt> | undefined,
   enhancer?: StoreEnhancer<Ext, StateExt>
-): Store<S, A, UnknownIfNonSpecific<StateExt>> & Ext {
+): Store<S, A, UnknownIfNonSpecific<StateExt>> & NoInfer<Ext> {
   if (typeof reducer !== 'function') {
     throw new Error(
       `Expected the root reducer to be a function. Instead, received: '${kindOf(
@@ -287,7 +286,7 @@ export function createStore<
       throw new Error(
         `Action "type" property must be a string. Instead, the actual type was: '${kindOf(
           action.type
-        )}'. Value was: '${action.type}' (stringified)`
+        )}'. Value was: '${String(action.type)}' (stringified)`
       )
     }
 
@@ -323,7 +322,7 @@ export function createStore<
       throw new Error(
         `Expected the nextReducer to be a function. Instead, received: '${kindOf(
           nextReducer
-        )}`
+        )}'`
       )
     }
 

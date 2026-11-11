@@ -7,71 +7,42 @@ description: 'Introduction > Getting Started: Resources to get started learning 
 import LiteYouTubeEmbed from 'react-lite-youtube-embed';
 import 'react-lite-youtube-embed/dist/LiteYouTubeEmbed.css'
 
-Redux is a predictable state container for JavaScript apps.
+Redux is a JS library for predictable and maintainable global state management.
 
 It helps you write applications that behave consistently, run in different environments (client, server, and native), and are easy to test. On top of that, it provides a great developer experience, such as [live code editing combined with a time traveling debugger](https://github.com/reduxjs/redux-devtools).
 
-You can use Redux together with [React](https://reactjs.org), or with any other view library. It is tiny (2kB, including dependencies), but has a large ecosystem of addons available.
+You can use Redux together with [React](https://react.dev), or with any other view library. It is tiny (2kB, including dependencies), but has a large ecosystem of addons available.
 
-[**Redux Toolkit**](https://redux-toolkit.js.org) is our official recommended approach for writing Redux logic. It wraps around the Redux core, and contains packages and functions that we think are essential for building a Redux app. Redux Toolkit builds in our suggested best practices, simplifies most Redux tasks, prevents common mistakes, and makes it easier to write Redux applications.
+[**Redux Toolkit**](/toolkit) is our official recommended approach for writing Redux logic. It wraps around the Redux core, and contains packages and functions that we think are essential for building a Redux app. Redux Toolkit builds in our suggested best practices, simplifies most Redux tasks, prevents common mistakes, and makes it easier to write Redux applications.
 
-RTK includes utilities that help simplify many common use cases, including [store setup](https://redux-toolkit.js.org/api/configureStore),
-[creating reducers and writing immutable update logic](https://redux-toolkit.js.org/api/createreducer),
-and even [creating entire "slices" of state at once](https://redux-toolkit.js.org/api/createslice).
+RTK includes utilities that help simplify many common use cases, including [store setup](/toolkit/api/configureStore),
+[creating reducers and writing immutable update logic](/toolkit/api/createReducer),
+and even [creating entire "slices" of state at once](/toolkit/api/createSlice).
 
 Whether you're a brand new Redux user setting up your first project, or an experienced user who wants to
-simplify an existing application, **[Redux Toolkit](https://redux-toolkit.js.org/)** can help you
+simplify an existing application, **[Redux Toolkit](/toolkit)** can help you
 make your Redux code better.
 
 ## Installation
-
-### Redux Toolkit
 
 Redux Toolkit is available as a package on NPM for use with a module bundler or in a Node application:
 
 ```bash
 # NPM
-npm install @reduxjs/toolkit
+npm install @reduxjs/toolkit react-redux
 
 # Yarn
-yarn add @reduxjs/toolkit
+yarn add @reduxjs/toolkit react-redux
 ```
 
-### Create a React Redux App
-
-The recommended way to start new apps with React and Redux is by using [our official Redux+TS template for Vite](https://github.com/reduxjs/redux-templates), or by creating a new Next.js project using [Next's `with-redux` template](https://github.com/vercel/next.js/tree/canary/examples/with-redux).
-
-Both of these already have Redux Toolkit and React-Redux configured appropriately for that build tool, and come with a small example app that demonstrates how to use several of Redux Toolkit's features.
+The recommended way to start a new React + Redux app is to use one of our [official templates](https://github.com/reduxjs/redux-templates), which come pre-configured with Redux Toolkit and include a small example app:
 
 ```bash
-# Vite with our Redux+TS template
-# (using the `degit` tool to clone and extract the template)
-npx degit reduxjs/redux-templates/packages/vite-template-redux my-app
-
-# Next.js using the `with-redux` template
-npx create-next-app --example with-redux my-app
+# Vite + TypeScript
+npx tiged reduxjs/redux-templates/packages/vite-template-redux my-app
 ```
 
-We do not currently have official React Native templates, but recommend these templates for standard React Native and for Expo:
-
-- https://github.com/rahsheen/react-native-template-redux-typescript
-- https://github.com/rahsheen/expo-template-redux-typescript
-
-### Redux Core
-
-The Redux core library is available as a package on NPM for use with a module bundler or in a Node application:
-
-```bash
-# NPM
-npm install redux
-
-# Yarn
-yarn add redux
-```
-
-The package includes a precompiled ESM build that can be used as a [`<script type="module">` tag](https://unpkg.com/redux/dist/redux.browser.mjs) directly in the browser.
-
-For more details, see the [Installation](Installation.md) page.
+See the [Installation](Installation.md) page for the full list of templates (including Expo, React Native, and Next.js), the Redux DevTools browser extension, and installing the Redux core package by itself.
 
 ## Basic Example
 
@@ -81,14 +52,20 @@ To specify how state gets updated in response to an action, you write pure _redu
 
 Redux Toolkit simplifies the process of writing Redux logic and setting up the store. With Redux Toolkit, the basic app logic looks like:
 
-```js
+```ts
 import { createSlice, configureStore } from '@reduxjs/toolkit'
+
+interface CounterState {
+  value: number
+}
+
+const initialState: CounterState = {
+  value: 0
+}
 
 const counterSlice = createSlice({
   name: 'counter',
-  initialState: {
-    value: 0
-  },
+  initialState,
   reducers: {
     incremented: state => {
       // Redux Toolkit allows us to write "mutating" logic in reducers. It
@@ -195,7 +172,7 @@ The [**Redux Fundamentals tutorial**](../tutorials/fundamentals/part-1-overview.
 
 Redux maintainer Mark Erikson appeared on the "Learn with Jason" show to explain how we recommend using Redux today. The show includes a live-coded example app that shows how to use Redux Toolkit and React-Redux hooks with TypeScript, as well as the new RTK Query data fetching APIs.
 
-See [the "Learn Modern Redux" show notes page](https://www.learnwithjason.dev/let-s-learn-modern-redux) for a transcript and links to the example app source.
+See [the "Learn Modern Redux" show notes page](https://codetv.dev/series/learn-with-jason/s4/let-s-learn-modern-redux) for a transcript and links to the example app source.
 
 <LiteYouTubeEmbed
     id="9zySeP5vH9c"
@@ -205,16 +182,16 @@ See [the "Learn Modern Redux" show notes page](https://www.learnwithjason.dev/le
 ### Additional Tutorials
 
 - The Redux repository contains several example projects demonstrating various aspects of how to use Redux. Almost all examples have a corresponding CodeSandbox sandbox. This is an interactive version of the code that you can play with online. See the complete list of examples in the **[Examples page](./Examples.md)**.
-- Redux creator Dan Abramov's **free ["Getting Started with Redux" video series](https://app.egghead.io/playlists/fundamentals-of-redux-course-from-dan-abramov-bd5cc867)** and **[Building React Applications with Idiomatic Redux](https://egghead.io/courses/building-react-applications-with-idiomatic-redux)** video courses on Egghead.io
-- Redux maintainer Mark Erikson's **["Redux Fundamentals" conference talk](https://blog.isquaredsoftware.com/2018/03/presentation-reactathon-redux-fundamentals/)** and [**"Redux Fundamentals" workshop slides**](https://blog.isquaredsoftware.com/2018/06/redux-fundamentals-workshop-slides/)
-- Dave Ceddia's post [**A Complete React Redux Tutorial for Beginners**](https://daveceddia.com/redux-tutorial/)
+- Redux creator Dan Abramov's **free ["Getting Started with Redux" video series](https://egghead.io/courses/fundamentals-of-redux-course-from-dan-abramov-bd5cc867)** and **[Building React Applications with Idiomatic Redux](https://egghead.io/courses/building-react-applications-with-idiomatic-redux)** video courses on Egghead.io. These predate Redux Toolkit and show the core APIs written by hand. They're still a good explanation of how Redux works underneath, but read the Essentials tutorial first.
+- Redux maintainer Mark Erikson's **["Redux Fundamentals" conference talk](https://blog.isquaredsoftware.com/2018/03/presentation-reactathon-redux-fundamentals/)** and [**"Redux Fundamentals" workshop slides**](https://blog.isquaredsoftware.com/2018/06/redux-fundamentals-workshop-slides/) (2018, older patterns)
+- Dave Ceddia's post [**A Complete React Redux Tutorial for Beginners**](https://daveceddia.com/redux-tutorial/) (older patterns)
 
 ### Other Resources
 
 - The **[Redux FAQ](../FAQ.md)** answers many common questions about how to use Redux, and the **["Using Redux" docs section](../usage/index.md)** has information on handling derived data, testing, structuring reducer logic, and reducing boilerplate.
 - Redux maintainer Mark Erikson's **["Practical Redux" tutorial series](https://blog.isquaredsoftware.com/series/practical-redux/)** demonstrates real-world intermediate and advanced techniques for working with React and Redux (also available as **[an interactive course on Educative.io](https://www.educative.io/collection/5687753853370368/5707702298738688)**).
 - The **[React/Redux links list](https://github.com/markerikson/react-redux-links)** has categorized articles on working with [reducers and selectors](https://github.com/markerikson/react-redux-links/blob/master/redux-reducers-selectors.md), [managing side effects](https://github.com/markerikson/react-redux-links/blob/master/redux-side-effects.md), [Redux architecture and best practices](https://github.com/markerikson/react-redux-links/blob/master/redux-architecture.md), and more.
-- Our community has created thousands of Redux-related libraries, addons, and tools. The **["Ecosystem" docs page](./Ecosystem.md)** lists our recommendations, and there's a complete listing available in the **[Redux addons catalog](https://github.com/markerikson/redux-ecosystem-links)**.
+- Our community has created thousands of Redux-related libraries, addons, and tools. The **["Ecosystem" docs page](./Ecosystem.md)** lists our recommendations.
 
 ## Help and Discussion
 
